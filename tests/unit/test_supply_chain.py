@@ -58,3 +58,10 @@ def test_go_toolchain_is_exact_and_consistent_across_workflows() -> None:
         workflow = workflow_path.read_text(encoding="utf-8")
         if "actions/setup-go@" in workflow:
             assert f"go-version: {toolchain}" in workflow
+
+
+def test_dependabot_applies_cooling_period_to_every_ecosystem() -> None:
+    config = yaml.safe_load(Path(".github/dependabot.yml").read_text(encoding="utf-8"))
+    assert config["updates"]
+    for update in config["updates"]:
+        assert update["cooldown"]["default-days"] == 14

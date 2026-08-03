@@ -24,6 +24,7 @@ An alternate configuration path may be supplied as the final argument.
 
 - [Catalog reference](docs/catalog.md) lists the generated, reviewed hook inventory.
 - [Threat model](docs/THREAT_MODEL.md) explains what a registry pin does and does not protect.
+- [Supply-chain security](docs/SUPPLY_CHAIN.md) defines dependency and provenance controls.
 - [Maintenance guide](docs/MAINTENANCE.md) identifies every authoritative source and update flow.
 - [GitHub settings](docs/GITHUB_SETTINGS.md) records repository protections that live outside Git.
 - [Contributing](CONTRIBUTING.md) describes the contribution entry point.

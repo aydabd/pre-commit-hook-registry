@@ -17,6 +17,7 @@ contribution guide, and the README link here rather than restating these instruc
 | Review procedure | `docs/REVIEW_CHECKLIST.md` | Individual review records |
 | Security reporting | `SECURITY.md` | GitHub security settings |
 | Trust boundaries | `docs/THREAT_MODEL.md` | README link |
+| Supply-chain control objectives | `docs/SUPPLY_CHAIN.md` | CI and repository settings |
 | GitHub repository protections | `docs/GITHUB_SETTINGS.md` | GitHub settings |
 | Release contents and provenance | `.github/workflows/release.yaml` and `scripts/release_manifest.py` | Release artifacts |
 
@@ -24,9 +25,7 @@ Values may appear in executable integration points where a tool cannot consume t
 source directly. Drift tests or CI checks must cover those copies. Prose documentation should link
 to the source instead of repeating values.
 
-Runtime and automation pins use current stable, supported releases after compatibility and security
-review. Exact versions and full Action SHAs remain mandatory; mutable `latest` references are never
-used. Dependabot discovers newer candidates, while CI and the review process prevent silent adoption.
+Runtime and automation pins follow the acceptance policy in `docs/SUPPLY_CHAIN.md`.
 
 ## Routine change flow
 
