@@ -7,7 +7,7 @@
 - Upstream diff: reviewed for the CLI and pre-commit definition
 - Manifest deviations: installed through pre-commit Go support at the full Git SHA using the
   upstream module's historical `github.com/zricethezav/gitleaks/v8` identity; the reviewed source
-  remains `github.com/gitleaks/gitleaks`. Go toolchain 1.24.11,
+  remains `github.com/gitleaks/gitleaks`. Go toolchain 1.26.5,
   `git --pre-commit --redact --staged --verbose`, and no filename passing are preserved.
 - Tests: redacted synthetic-secret and clean-repository execution required by the release gate
 - Reviewer: aydabd

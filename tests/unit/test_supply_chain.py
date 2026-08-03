@@ -49,3 +49,12 @@ def test_python_subprocesses_never_enable_a_shell() -> None:
                     isinstance(item.value, ast.Constant) and item.value.value is False
                     for item in shell_keywords
                 )
+
+
+def test_go_toolchain_is_exact_and_consistent_across_workflows() -> None:
+    toolchain = "1.26.5"
+    assert f"toolchain go{toolchain}" in Path("go.mod").read_text(encoding="utf-8")
+    for workflow_path in Path(".github/workflows").glob("*.yaml"):
+        workflow = workflow_path.read_text(encoding="utf-8")
+        if "actions/setup-go@" in workflow:
+            assert f"go-version: {toolchain}" in workflow

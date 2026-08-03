@@ -24,6 +24,10 @@ Values may appear in executable integration points where a tool cannot consume t
 source directly. Drift tests or CI checks must cover those copies. Prose documentation should link
 to the source instead of repeating values.
 
+Runtime and automation pins use current stable, supported releases after compatibility and security
+review. Exact versions and full Action SHAs remain mandatory; mutable `latest` references are never
+used. Dependabot discovers newer candidates, while CI and the review process prevent silent adoption.
+
 ## Routine change flow
 
 1. Identify the authoritative source in the table above.
