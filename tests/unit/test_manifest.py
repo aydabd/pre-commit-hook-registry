@@ -19,3 +19,12 @@ def test_runtime_pins_match_catalog() -> None:
         if upstream.name != "ruff-pre-commit":
             assert upstream.sha in manifest
     assert "ruff==0.15.22" in manifest
+
+
+def test_gitleaks_uses_declared_go_module_at_reviewed_sha() -> None:
+    manifest = yaml.safe_load(Path(".pre-commit-hooks.yaml").read_text(encoding="utf-8"))
+    gitleaks = next(item for item in manifest if item["id"] == "gitleaks")
+    dependency = "github.com/zricethezav/gitleaks/v8@83d9cd684c87d95d656c1458ef04895a7f1cbd8e"
+
+    assert gitleaks["additional_dependencies"] == [dependency]
+    assert "require github.com/zricethezav/gitleaks/v8 v8.30.1" in Path("go.mod").read_text(encoding="utf-8")

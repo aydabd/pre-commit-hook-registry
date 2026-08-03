@@ -100,7 +100,7 @@
   entry: gitleaks git --pre-commit --redact --staged --verbose
   language: golang
   pass_filenames: false
-  additional_dependencies: ["github.com/gitleaks/gitleaks/v8@83d9cd684c87d95d656c1458ef04895a7f1cbd8e"]
+  additional_dependencies: ["github.com/zricethezav/gitleaks/v8@83d9cd684c87d95d656c1458ef04895a7f1cbd8e"]
 - id: ruff-check
   name: ruff check
   description: Run 'ruff check' for extremely fast Python linting
