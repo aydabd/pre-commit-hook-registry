@@ -24,6 +24,7 @@ docs-check:
 locks-check:
 	$(UV) lock --check
 	@if command -v go >/dev/null; then go mod verify; else echo "go is required for go mod verify"; exit 1; fi
+	$(UV) run python scripts/verify_upstream_tags.py
 
 check: lint typecheck test docs-check locks-check build
 

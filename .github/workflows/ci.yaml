@@ -52,6 +52,7 @@ jobs:
       - run: uv run pyright
       - run: uv lock --check
       - run: go mod verify
+      - run: uv run python scripts/verify_upstream_tags.py
       - run: uv build
       - run: git diff --exit-code
 
