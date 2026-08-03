@@ -54,3 +54,29 @@ jobs:
       - run: go mod verify
       - run: uv build
       - run: git diff --exit-code
+
+  installed-hooks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+        with:
+          version: "0.12.0"
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version: 1.24.11
+          cache-dependency-path: go.sum
+      - run: uv sync --all-groups --locked
+      - name: Install and execute representative adapters
+        run: |
+          uv run pre-commit try-repo . check-yaml --all-files
+          uv run pre-commit try-repo . trailing-whitespace --all-files
+          uv run pre-commit try-repo . ruff-check --all-files
+          uv run pre-commit try-repo . ruff-format --all-files
+          uv run pre-commit try-repo . gitleaks --all-files
