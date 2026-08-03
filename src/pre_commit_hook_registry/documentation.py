@@ -7,7 +7,14 @@ from pre_commit_hook_registry.models import Catalog
 
 def render_catalog(catalog: Catalog) -> str:
     """Render the public catalog reference as Markdown."""
-    lines = ["# Curated hook catalog\n", "<!-- Generated; edit catalog data instead. -->\n\n"]
+    required = ", ".join(f"`{item}`" for item in sorted(catalog.required_ids))
+    lines = [
+        "# Curated hook catalog\n",
+        "<!-- Generated; edit catalog data instead. -->\n\n",
+        "## Registry policy\n\n",
+        f"- Repository: [{catalog.registry_url}]({catalog.registry_url})\n",
+        f"- Required hook IDs: {required}\n\n",
+    ]
     for upstream in sorted(catalog.upstreams, key=lambda item: item.name):
         lines.extend(
             [

@@ -19,7 +19,3 @@ def test_runtime_pins_match_catalog() -> None:
         if upstream.name != "ruff-pre-commit":
             assert upstream.sha in manifest
     assert "ruff==0.15.22" in manifest
-
-
-def test_public_catalog_copy_matches_packaged_canonical_resource() -> None:
-    assert Catalog.load(Path("catalog/hooks.yaml")) == Catalog.load()

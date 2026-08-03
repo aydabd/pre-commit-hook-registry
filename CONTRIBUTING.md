@@ -1,7 +1,9 @@
 # Contributing
 
-Changes to an upstream pin require a completed review record, catalog and adapter reconciliation,
-updated ecosystem locks, generated documentation, and integration tests. Run `make check` before
-opening a pull request. Commits and release tags must be SSH-signed; use focused, linear commits.
+Read [`AGENTS.md`](AGENTS.md) and the human-readable
+[`maintenance guide`](docs/MAINTENANCE.md) before making changes. They define the repository’s
+source-of-truth boundaries, change workflow, signing requirement, and verification commands.
 
-No dependency update is merged automatically. See [the review checklist](docs/REVIEW_CHECKLIST.md).
+Upstream dependency proposals must also follow the
+[`review checklist`](docs/REVIEW_CHECKLIST.md). Dependency pull requests are reviewed and merged
+manually; they are never automatically accepted.

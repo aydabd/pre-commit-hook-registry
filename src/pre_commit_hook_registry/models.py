@@ -95,6 +95,7 @@ class Catalog:
 
     schema_version: int
     registry_url: str
+    required_ids: frozenset[str]
     upstreams: tuple[Upstream, ...]
 
     @classmethod
@@ -107,8 +108,15 @@ class Catalog:
         if raw["schema_version"] != 1:
             raise ValueError("unsupported catalog schema_version")
         registry = raw["registry"]
-        if not isinstance(registry, dict) or set(registry) != {"url"}:
-            raise ValueError("registry must contain only url")
+        if not isinstance(registry, dict) or set(registry) != {"url", "required_ids"}:
+            raise ValueError("registry must contain only url and required_ids")
+        required_ids = registry["required_ids"]
+        if (
+            not isinstance(required_ids, list)
+            or not required_ids
+            or not all(isinstance(item, str) and item for item in required_ids)
+        ):
+            raise ValueError("registry required_ids must be non-empty strings")
         upstreams = raw["upstreams"]
         if not isinstance(upstreams, dict) or not upstreams:
             raise ValueError("upstreams must be a non-empty mapping")
@@ -116,7 +124,7 @@ class Catalog:
         all_ids = [hook_id for upstream in parsed for hook_id in upstream.approved_ids]
         if len(all_ids) != len(set(all_ids)):
             raise ValueError("approved hook ids must be globally unique")
-        return cls(1, _string(registry, "url"), parsed)
+        return cls(1, _string(registry, "url"), frozenset(required_ids), parsed)
 
     @classmethod
     def load(cls, path: Path | None = None) -> Self:
@@ -130,4 +138,4 @@ class Catalog:
     def approved_ids(self) -> frozenset[str]:
         """Return every approved public hook id, including the policy validator."""
         upstream_ids = (item for upstream in self.upstreams for item in upstream.approved_ids)
-        return frozenset({"validate-registry-config", *upstream_ids})
+        return frozenset({*self.required_ids, *upstream_ids})

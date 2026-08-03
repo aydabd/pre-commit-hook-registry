@@ -93,6 +93,7 @@ def validate_config(config_path: Path, catalog: Catalog | None = None) -> tuple[
             valid_args = valid_args and all(arg in allowed for arg in args)
             if not valid_args:
                 errors.append(_error("PCHR014", f"forbidden args for {hook_id}"))
-    if "validate-registry-config" not in seen:
-        errors.append(_error("PCHR015", "validate-registry-config is required"))
+    missing_required = policy.required_ids - seen
+    if missing_required:
+        errors.append(_error("PCHR015", f"required hook ids missing: {sorted(missing_required)}"))
     return tuple(errors)

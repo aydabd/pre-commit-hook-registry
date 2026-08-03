@@ -1,35 +1,32 @@
 # Pre-commit Hook Registry
 
-A public, curated hook gateway maintained by `@aydabd`. Consumers reference only this repository,
-pin its complete 40-character commit SHA, and opt into reviewed hook IDs.
+A public gateway for a small, reviewed set of pre-commit hooks. Consumer repositories use one
+registry URL, pin a complete registry commit SHA, and opt into the hooks they need.
 
-```yaml
-repos:
-  - repo: https://github.com/aydabd/pre-commit-hook-registry
-    rev: <FULL_RELEASE_COMMIT_SHA>
-    hooks:
-      - id: validate-registry-config
-      - id: check-yaml
-      - id: trailing-whitespace
-```
+## Use the registry
 
-The validator runs as `pre-commit-hook-registry validate [CONFIG]`; `CONFIG` defaults to
-`.pre-commit-config.yaml`. The canonical catalog is packaged with the validator and cannot be
-replaced by a consumer.
+Start with a tested template:
 
-## Trust boundary
+- [`consumer-examples/minimal.yaml`](consumer-examples/minimal.yaml)
+- [`consumer-examples/python.yaml`](consumer-examples/python.yaml)
+- [`consumer-examples/security.yaml`](consumer-examples/security.yaml)
 
-A registry commit pin makes the registry manifest, adapter definitions, source pins, and review
-records immutable. Python and Go package infrastructure remains part of the installation trust
-path; this project does not vendor upstream repositories or binaries. Consumer-local Ruff and
-Gitleaks configuration is intentionally outside registry policy. See [the threat model](docs/THREAT_MODEL.md).
-
-## Local verification
+Replace `<FULL_RELEASE_COMMIT_SHA>` with the commit behind a published release. Pin the commit, not
+the release tag. Run policy validation with:
 
 ```bash
-uv sync --all-groups --locked
-make check
+pre-commit-hook-registry validate
 ```
 
-See [the generated catalog](docs/catalog.md), [contribution process](CONTRIBUTING.md), and
-[security policy](SECURITY.md). Consumers pin a release's commit SHA, never its tag.
+An alternate configuration path may be supplied as the final argument.
+
+## Understand and maintain the project
+
+- [Catalog reference](docs/catalog.md) lists the generated, reviewed hook inventory.
+- [Threat model](docs/THREAT_MODEL.md) explains what a registry pin does and does not protect.
+- [Maintenance guide](docs/MAINTENANCE.md) identifies every authoritative source and update flow.
+- [GitHub settings](docs/GITHUB_SETTINGS.md) records repository protections that live outside Git.
+- [Contributing](CONTRIBUTING.md) describes the contribution entry point.
+- [Security policy](SECURITY.md) explains private vulnerability reporting.
+
+Local verification starts with `uv sync --all-groups --locked`, followed by `make check`.

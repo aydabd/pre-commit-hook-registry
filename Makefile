@@ -1,6 +1,6 @@
 UV ?= uv
 
-.PHONY: bootstrap check lint typecheck test build docs-check locks-check clean
+.PHONY: bootstrap check lint typecheck test build docs docs-check locks-check clean
 
 bootstrap:
 	$(UV) sync --all-groups --locked
@@ -17,6 +17,9 @@ test:
 
 build:
 	$(UV) build
+
+docs:
+	$(UV) run python -c 'from pathlib import Path; from pre_commit_hook_registry.documentation import generate_catalog_document; generate_catalog_document(Path("docs/catalog.md"))'
 
 docs-check:
 	$(UV) run python -c 'from pathlib import Path; from pre_commit_hook_registry.documentation import render_catalog; from pre_commit_hook_registry.models import Catalog; assert Path("docs/catalog.md").read_text() == render_catalog(Catalog.load())'

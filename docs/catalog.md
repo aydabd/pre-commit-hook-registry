@@ -1,6 +1,11 @@
 # Curated hook catalog
 <!-- Generated; edit catalog data instead. -->
 
+## Registry policy
+
+- Repository: [https://github.com/aydabd/pre-commit-hook-registry](https://github.com/aydabd/pre-commit-hook-registry)
+- Required hook IDs: `validate-registry-config`
+
 ## gitleaks
 
 - Upstream: [https://github.com/gitleaks/gitleaks](https://github.com/gitleaks/gitleaks)

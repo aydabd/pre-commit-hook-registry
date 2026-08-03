@@ -1,6 +1,7 @@
 schema_version: 1
 registry:
   url: https://github.com/aydabd/pre-commit-hook-registry
+  required_ids: [validate-registry-config]
 upstreams:
   pre-commit-hooks:
     url: https://github.com/pre-commit/pre-commit-hooks

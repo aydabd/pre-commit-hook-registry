@@ -25,8 +25,8 @@ def test_explicit_catalog_path(tmp_path: Path) -> None:
     "text",
     [
         "key: one\nkey: two\n",
-        "schema_version: 2\nregistry: {url: x}\nupstreams: {}\n",
-        "schema_version: 1\nregistry: {url: x, extra: y}\nupstreams: {}\n",
+        "schema_version: 2\nregistry: {url: x, required_ids: [x]}\nupstreams: {}\n",
+        "schema_version: 1\nregistry: {url: x, required_ids: [x], extra: y}\nupstreams: {}\n",
         "[]",
     ],
 )
