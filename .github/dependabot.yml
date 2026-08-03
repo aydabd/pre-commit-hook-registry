@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: pre-commit
+    directory: /upstream
+    schedule: {interval: weekly}
+    cooldown: {default-days: 14}
+    reviewers: [aydabd]
+  - package-ecosystem: uv
+    directory: /
+    schedule: {interval: weekly}
+    cooldown: {default-days: 14}
+    reviewers: [aydabd]
+  - package-ecosystem: gomod
+    directory: /
+    schedule: {interval: weekly}
+    cooldown: {default-days: 14}
+    reviewers: [aydabd]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: weekly}
+    cooldown: {default-days: 14}
+    reviewers: [aydabd]

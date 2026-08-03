@@ -1,0 +1,123 @@
+- id: validate-registry-config
+  name: Validate registry configuration
+  description: Enforce immutable, curated registry use.
+  entry: pre-commit-hook-registry validate
+  language: python
+  files: ^\.pre-commit-config\.ya?ml$
+  pass_filenames: true
+- id: check-added-large-files
+  name: check for added large files
+  description: prevents giant files from being committed.
+  entry: check-added-large-files
+  language: python
+  stages: [pre-commit, pre-push, manual]
+  minimum_pre_commit_version: 3.2.0
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-case-conflict
+  name: check for case conflicts
+  description: checks for files that would conflict in case-insensitive filesystems.
+  entry: check-case-conflict
+  language: python
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-json
+  name: check json
+  description: checks json files for parseable syntax.
+  entry: check-json
+  language: python
+  types: [json]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-merge-conflict
+  name: check for merge conflicts
+  description: checks for files that contain merge conflict strings.
+  entry: check-merge-conflict
+  language: python
+  types: [text]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-symlinks
+  name: check for broken symlinks
+  description: checks for symlinks which do not point to anything.
+  entry: check-symlinks
+  language: python
+  types: [symlink]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-toml
+  name: check toml
+  description: checks toml files for parseable syntax.
+  entry: check-toml
+  language: python
+  types: [toml]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: check-yaml
+  name: check yaml
+  description: checks yaml files for parseable syntax.
+  entry: check-yaml
+  language: python
+  types: [yaml]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: destroyed-symlinks
+  name: detect destroyed symlinks
+  description: detects symlinks changed to files containing the original target path.
+  entry: destroyed-symlinks
+  language: python
+  types: [file]
+  stages: [pre-commit, pre-push, manual]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: detect-private-key
+  name: detect private key
+  description: detects the presence of private keys.
+  entry: detect-private-key
+  language: python
+  types: [text]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: end-of-file-fixer
+  name: fix end of files
+  description: ensures that a file is empty or ends with one newline.
+  entry: end-of-file-fixer
+  language: python
+  types: [text]
+  stages: [pre-commit, pre-push, manual]
+  minimum_pre_commit_version: 3.2.0
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: mixed-line-ending
+  name: mixed line ending
+  description: replaces or checks mixed line endings.
+  entry: mixed-line-ending
+  language: python
+  types: [text]
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: trailing-whitespace
+  name: trim trailing whitespace
+  description: trims trailing whitespace.
+  entry: trailing-whitespace-fixer
+  language: python
+  types: [text]
+  stages: [pre-commit, pre-push, manual]
+  minimum_pre_commit_version: 3.2.0
+  additional_dependencies: ["git+https://github.com/pre-commit/pre-commit-hooks@3e8a8703264a2f4a69428a0aa4dcb512790b2c8c"]
+- id: gitleaks
+  name: Detect hardcoded secrets
+  description: Detect hardcoded secrets using Gitleaks.
+  entry: gitleaks git --pre-commit --redact --staged --verbose
+  language: golang
+  pass_filenames: false
+  additional_dependencies: ["github.com/gitleaks/gitleaks/v8@83d9cd684c87d95d656c1458ef04895a7f1cbd8e"]
+- id: ruff-check
+  name: ruff check
+  description: Run 'ruff check' for extremely fast Python linting
+  entry: ruff check --force-exclude
+  language: python
+  types_or: [python, pyi, jupyter]
+  args: []
+  require_serial: true
+  minimum_pre_commit_version: "2.9.2"
+  additional_dependencies: ["ruff==0.15.22"]
+- id: ruff-format
+  name: ruff format
+  description: Run 'ruff format' for extremely fast Python formatting
+  entry: ruff format --force-exclude
+  language: python
+  types_or: [python, pyi, jupyter]
+  args: []
+  require_serial: true
+  minimum_pre_commit_version: "2.9.2"
+  additional_dependencies: ["ruff==0.15.22"]

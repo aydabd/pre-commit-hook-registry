@@ -1,0 +1,9 @@
+* @aydabd
+/.github/ @aydabd
+/catalog/ @aydabd
+/src/pre_commit_hook_registry/catalog.yaml @aydabd
+/.pre-commit-hooks.yaml @aydabd
+/reviews/ @aydabd
+/uv.lock @aydabd
+/go.mod @aydabd
+/go.sum @aydabd

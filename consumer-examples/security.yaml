@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/aydabd/pre-commit-hook-registry
+    rev: <FULL_RELEASE_COMMIT_SHA>
+    hooks:
+      - id: validate-registry-config
+      - id: detect-private-key
+      - id: gitleaks

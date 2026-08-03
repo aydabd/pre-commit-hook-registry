@@ -1,0 +1,11 @@
+.DS_Store
+.venv/
+.coverage
+.pytest_cache/
+.ruff_cache/
+.pyright/
+__pycache__/
+*.py[cod]
+build/
+dist/
+docs/generated/hooks.rst

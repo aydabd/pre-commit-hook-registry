@@ -1,0 +1,13 @@
+# Review: Gitleaks v8.30.1
+
+- Tag resolution: `v8.30.1` → `83d9cd684c87d95d656c1458ef04895a7f1cbd8e`
+- Release/cooling period: passed before initial selection
+- License: MIT
+- Security advisories: reviewed; no blocking advisory identified at review time
+- Upstream diff: reviewed for the CLI and pre-commit definition
+- Manifest deviations: installed through pre-commit Go support at the full Git SHA; Go toolchain is
+  pinned to 1.24.11; `git --pre-commit --redact --staged --verbose` and no filename passing are preserved
+- Tests: redacted synthetic-secret and clean-repository execution required by the release gate
+- Reviewer: aydabd
+- Review date: 2026-08-03
+- Decision: accepted for v0.1.0
