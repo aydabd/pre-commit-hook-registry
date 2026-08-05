@@ -17,7 +17,3 @@
 
 * establish maintainable source-of-truth guide ([390a418](https://github.com/aydabd/pre-commit-hook-registry/commit/390a418f988b8c6e3f3566ab00c789fa63f4cad9))
 * install canonical Apache 2.0 license ([#5](https://github.com/aydabd/pre-commit-hook-registry/issues/5)) ([9e63c0c](https://github.com/aydabd/pre-commit-hook-registry/commit/9e63c0c0a7b762864a111f155455125bb2d31322))
-
-## 0.1.0 - unreleased
-
-- Establish the public curated registry, strict consumer policy, and reviewed v1 adapters.

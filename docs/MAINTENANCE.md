@@ -42,10 +42,12 @@ Runtime and automation pins follow the acceptance policy in `docs/SUPPLY_CHAIN.m
 Release Please maintains the version and changelog through a release pull request. Its workflow is
 configured to skip GitHub release creation so that it cannot bypass the repository's signed-tag
 gate. Review each automation-created release pull request before approving its CI workflows. After
-the release pull request is squash-merged and all required checks pass on `main`, create and push an
-SSH-signed annotated version tag. The tag-triggered release workflow verifies that the tag targets
-protected `main`, repeats `make check`, builds the artifacts and material manifest, attests their
-provenance, and publishes the immutable GitHub release.
+the release pull request is squash-merged and all required checks pass on `main`, run
+`make release VERSION=X.Y.Z`. The command requires a clean, current `main`, reconciles the package,
+manifest, and changelog versions, repeats `make check`, then creates, verifies, and pushes the
+SSH-signed annotated tag. The tag-triggered release workflow verifies that the tag targets protected
+`main`, repeats `make check`, builds the artifacts and material manifest, attests their provenance,
+and publishes the immutable GitHub release.
 
 ## Generated documentation
 
