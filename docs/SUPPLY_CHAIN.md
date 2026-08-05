@@ -20,7 +20,9 @@ widely used guidance; it is not a claim of third-party certification.
 ## Build and release controls
 
 - Workflows default to read-only permissions and grant narrower write permissions only to the
-  release job that needs them.
+  Release Please and publication jobs that need them. Release Please uses the workflow-scoped token,
+  is prohibited from creating tags or releases, and requires maintainer approval before CI runs on
+  its pull requests.
 - Third-party Actions are limited to verified creators; all Actions are SHA pinned.
 - Release tags and commits are SSH signed. Releases are built by CI from protected `main`, include a
   material manifest and digests, and receive GitHub OIDC-backed artifact attestations.

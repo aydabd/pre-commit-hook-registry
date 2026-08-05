@@ -65,3 +65,18 @@ def test_dependabot_applies_cooling_period_to_every_ecosystem() -> None:
     assert config["updates"]
     for update in config["updates"]:
         assert update["cooldown"]["default-days"] == 14
+
+
+def test_release_please_only_prepares_release_pull_requests() -> None:
+    workflow = yaml.safe_load(Path(".github/workflows/release-please.yaml").read_text(encoding="utf-8"))
+    steps = workflow["jobs"]["release-please"]["steps"]
+
+    assert len(steps) == 1
+    assert steps[0]["with"]["skip-github-release"] is True
+    assert "skip-labeling" not in steps[0]["with"]
+
+
+def test_release_publication_requires_a_version_tag() -> None:
+    workflow = yaml.safe_load(Path(".github/workflows/release.yaml").read_text(encoding="utf-8"))
+
+    assert workflow[True] == {"push": {"tags": ["v*.*.*"]}}
