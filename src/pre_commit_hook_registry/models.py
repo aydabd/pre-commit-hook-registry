@@ -62,6 +62,9 @@ class Upstream:
     FIELDS: ClassVar[frozenset[str]] = frozenset(
         {"url", "tag", "sha", "license", "runtime_adapter", "approved_ids", "review_record"}
     )
+    RUNTIME_ADAPTERS: ClassVar[frozenset[str]] = frozenset(
+        {"golang-additional-dependency", "python-git-dependency", "python-package"}
+    )
 
     @classmethod
     def from_mapping(cls, name: str, value: object) -> Self:
@@ -77,13 +80,16 @@ class Upstream:
         sha = _string(value, "sha")
         if len(sha) != 40 or any(character not in "0123456789abcdef" for character in sha):
             raise ValueError(f"upstream '{name}' sha must be a lowercase full SHA")
+        runtime_adapter = _string(value, "runtime_adapter")
+        if runtime_adapter not in cls.RUNTIME_ADAPTERS:
+            raise ValueError(f"upstream '{name}' uses an unregistered runtime_adapter")
         return cls(
             name=name,
             url=_string(value, "url"),
             tag=_string(value, "tag"),
             sha=sha,
             license=_string(value, "license"),
-            runtime_adapter=_string(value, "runtime_adapter"),
+            runtime_adapter=runtime_adapter,
             approved_ids=tuple(ids),
             review_record=_string(value, "review_record"),
         )

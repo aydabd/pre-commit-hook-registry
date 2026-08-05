@@ -15,6 +15,7 @@ contribution guide, and the README link here rather than restating these instruc
 | Upstream update discovery | `upstream/.pre-commit-config.yaml` and `.github/dependabot.yml` | Dependabot pull requests |
 | Upstream acceptance evidence | `reviews/*.md` | Generated catalog links |
 | Review procedure | `docs/REVIEW_CHECKLIST.md` | Individual review records |
+| Hook disposition and adapter contract | `docs/ADMISSION.md` | Research and admission issues |
 | Security reporting | `SECURITY.md` | GitHub security settings |
 | Trust boundaries | `docs/THREAT_MODEL.md` | README link |
 | Supply-chain control objectives | `docs/SUPPLY_CHAIN.md` | CI and repository settings |

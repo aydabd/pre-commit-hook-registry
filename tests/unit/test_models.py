@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from pre_commit_hook_registry.models import Catalog, load_unique_yaml
+from pre_commit_hook_registry.models import Catalog, Upstream, load_unique_yaml
 
 
 def test_packaged_catalog_is_complete() -> None:
@@ -19,6 +19,23 @@ def test_explicit_catalog_path(tmp_path: Path) -> None:
     copy = tmp_path / "catalog.yaml"
     copy.write_text(source.read_text(encoding="utf-8"), encoding="utf-8")
     assert Catalog.load(copy) == Catalog.load()
+
+
+def test_catalog_uses_only_registered_adapter_mechanisms() -> None:
+    assert {upstream.runtime_adapter for upstream in Catalog.load().upstreams} <= Upstream.RUNTIME_ADAPTERS
+
+
+def test_every_admitted_upstream_records_a_disposition() -> None:
+    for upstream in Catalog.load().upstreams:
+        review = Path(upstream.review_record).read_text(encoding="utf-8")
+        assert "\n- Disposition: " in review, upstream.name
+
+
+def test_unregistered_adapter_mechanism_is_rejected() -> None:
+    text = Path("src/pre_commit_hook_registry/catalog.yaml").read_text(encoding="utf-8")
+    text = text.replace("python-git-dependency", "shell-installer", 1)
+    with pytest.raises(ValueError, match="unregistered runtime_adapter"):
+        Catalog.from_text(text)
 
 
 @pytest.mark.parametrize(

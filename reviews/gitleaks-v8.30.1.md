@@ -12,4 +12,5 @@
 - Tests: redacted synthetic-secret and clean-repository execution required by the release gate
 - Reviewer: aydabd
 - Review date: 2026-08-03
+- Disposition: reviewed adapter using pre-commit's isolated Go dependency mechanism
 - Decision: accepted for v0.1.0
