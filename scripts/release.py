@@ -9,9 +9,9 @@ import subprocess
 import sys
 from pathlib import Path
 
-import tomllib
-
 _VERSION = re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
+_PROJECT = re.compile(r"(?ms)^\[project\]\s*$\n(?P<body>.*?)(?=^\[|\Z)")
+_PROJECT_VERSION = re.compile(r'^version\s*=\s*"([^"]+)"\s*$', re.MULTILINE)
 
 
 def run(*args: str, capture: bool = False) -> str:
@@ -28,6 +28,15 @@ def run(*args: str, capture: bool = False) -> str:
 def fail(message: str) -> None:
     """Stop before creating a tag with an actionable error."""
     raise SystemExit(message)
+
+
+def project_version(document: str) -> str:
+    """Read the version from the top-level project table without extra dependencies."""
+    project = _PROJECT.search(document)
+    version = _PROJECT_VERSION.search(project.group("body")) if project else None
+    if version is None:
+        fail("pyproject.toml must contain project.version")
+    return version.group(1)
 
 
 def main(version: str) -> None:
@@ -54,9 +63,9 @@ def main(version: str) -> None:
     ):
         fail(f"tag {tag} already exists")
 
-    project = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+    package_version = project_version(Path("pyproject.toml").read_text(encoding="utf-8"))
     manifest = json.loads(Path(".release-please-manifest.json").read_text(encoding="utf-8"))
-    if project["project"]["version"] != version or manifest.get(".") != version:
+    if package_version != version or manifest.get(".") != version:
         fail("VERSION must match pyproject.toml and .release-please-manifest.json")
     headings = re.findall(r"^## ([^\n]+)$", Path("CHANGELOG.md").read_text(encoding="utf-8"), re.MULTILINE)
     if sum(heading.startswith(version) for heading in headings) != 1:
