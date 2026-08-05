@@ -49,6 +49,12 @@ SSH-signed annotated tag. The tag-triggered release workflow verifies that the t
 `main`, repeats `make check`, builds the artifacts and material manifest, attests their provenance,
 and publishes the immutable GitHub release.
 
+If publication fails after the immutable tag is pushed, fix the release workflow through the normal
+pull-request process. Then manually dispatch the `Release` workflow with the existing tag. The
+recovery dispatch must use the protected `main` branch and be started by the repository owner. The
+recovery path checks out and re-verifies that exact signed tag before repeating the build,
+attestation, and publication steps; never move or replace the tag.
+
 ## Generated documentation
 
 `docs/catalog.md` is generated from the packaged catalog. Do not edit it by hand. CI verifies that
