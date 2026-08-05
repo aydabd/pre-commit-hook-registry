@@ -1,6 +1,6 @@
 UV ?= uv
 
-.PHONY: bootstrap check lint typecheck test build docs docs-check locks-check clean
+.PHONY: bootstrap check lint typecheck test build docs docs-check locks-check release clean
 
 bootstrap:
 	$(UV) sync --all-groups --locked
@@ -30,6 +30,10 @@ locks-check:
 	$(UV) run python scripts/verify_upstream_tags.py
 
 check: lint typecheck test docs-check locks-check build
+
+release:
+	@test -n "$(VERSION)" || { echo "usage: make release VERSION=X.Y.Z"; exit 2; }
+	$(UV) run python scripts/release.py "$(VERSION)"
 
 clean:
 	rm -rf .venv .coverage .pytest_cache .ruff_cache .pyright build dist
