@@ -85,9 +85,11 @@ def test_release_publication_requires_a_version_tag() -> None:
     triggers = workflow.get("on", workflow.get(True))
     config = json.loads(Path("release-please-config.json").read_text(encoding="utf-8"))
     package = config["packages"]["."]
+    manual_tag = triggers["workflow_dispatch"]["inputs"]["tag"]
 
     assert triggers["push"] == {"tags": ["v*.*.*"]}
-    assert triggers["workflow_dispatch"]["inputs"]["tag"]["required"] is True
+    assert manual_tag["required"] is True
+    assert manual_tag["type"] == "string"
     assert package["include-component-in-tag"] is False
     assert package["include-v-in-tag"] is True
 
@@ -101,6 +103,14 @@ def test_release_recovery_builds_the_existing_tag_in_the_project_environment() -
         step for step in steps if step.get("name") == "Generate artifacts and release manifest"
     )
 
-    assert "inputs.tag" in job["env"]["RELEASE_TAG"]
-    assert "inputs.tag" in checkout["with"]["ref"]
+    assert job["if"] == (
+        "github.event_name == 'push' || "
+        "(github.ref == 'refs/heads/main' && github.actor == github.repository_owner)"
+    )
+    assert job["env"]["RELEASE_TAG"] == (
+        "${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}"
+    )
+    assert checkout["with"]["ref"] == (
+        "${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}"
+    )
     assert "uv run python scripts/release_manifest.py" in artifact_step["run"]
