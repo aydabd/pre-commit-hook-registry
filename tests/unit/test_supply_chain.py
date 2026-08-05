@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -82,5 +83,9 @@ def test_release_please_only_prepares_release_pull_requests() -> None:
 def test_release_publication_requires_a_version_tag() -> None:
     workflow = yaml.safe_load(Path(".github/workflows/release.yaml").read_text(encoding="utf-8"))
     triggers = workflow.get("on", workflow.get(True))
+    config = json.loads(Path("release-please-config.json").read_text(encoding="utf-8"))
+    package = config["packages"]["."]
 
     assert triggers == {"push": {"tags": ["v*.*.*"]}}
+    assert package["include-component-in-tag"] is False
+    assert package["include-v-in-tag"] is True
