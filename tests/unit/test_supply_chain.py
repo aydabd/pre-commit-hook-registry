@@ -86,6 +86,21 @@ def test_release_publication_requires_a_version_tag() -> None:
     config = json.loads(Path("release-please-config.json").read_text(encoding="utf-8"))
     package = config["packages"]["."]
 
-    assert triggers == {"push": {"tags": ["v*.*.*"]}}
+    assert triggers["push"] == {"tags": ["v*.*.*"]}
+    assert triggers["workflow_dispatch"]["inputs"]["tag"]["required"] is True
     assert package["include-component-in-tag"] is False
     assert package["include-v-in-tag"] is True
+
+
+def test_release_recovery_builds_the_existing_tag_in_the_project_environment() -> None:
+    workflow = yaml.safe_load(Path(".github/workflows/release.yaml").read_text(encoding="utf-8"))
+    job = workflow["jobs"]["release"]
+    steps = job["steps"]
+    checkout = next(step for step in steps if step.get("uses", "").startswith("actions/checkout@"))
+    artifact_step = next(
+        step for step in steps if step.get("name") == "Generate artifacts and release manifest"
+    )
+
+    assert "inputs.tag" in job["env"]["RELEASE_TAG"]
+    assert "inputs.tag" in checkout["with"]["ref"]
+    assert "uv run python scripts/release_manifest.py" in artifact_step["run"]
