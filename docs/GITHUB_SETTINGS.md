@@ -10,6 +10,9 @@ repository. Check these settings after initial publication and periodically ther
 - Dependabot alerts and security updates enabled.
 - Secret scanning and push protection enabled.
 - Releases immutable.
+- GitHub Actions may create pull requests so Release Please can maintain the release candidate.
+  Release Please does not approve pull requests. CI runs created for its pull requests remain
+  blocked until a maintainer reviews the changes and approves the workflows to run.
 
 ## Branch and tag rules
 

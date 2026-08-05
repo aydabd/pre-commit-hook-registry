@@ -19,7 +19,7 @@ contribution guide, and the README link here rather than restating these instruc
 | Trust boundaries | `docs/THREAT_MODEL.md` | README link |
 | Supply-chain control objectives | `docs/SUPPLY_CHAIN.md` | CI and repository settings |
 | GitHub repository protections | `docs/GITHUB_SETTINGS.md` | GitHub settings |
-| Release contents and provenance | `.github/workflows/release.yaml` and `scripts/release_manifest.py` | Release artifacts |
+| Release preparation, contents, and provenance | `release-please-config.json`, `.release-please-manifest.json`, `.github/workflows/release-please.yaml`, `.github/workflows/release.yaml`, and `scripts/release_manifest.py` | Release pull requests and artifacts |
 
 Values may appear in executable integration points where a tool cannot consume the authoritative
 source directly. Drift tests or CI checks must cover those copies. Prose documentation should link
@@ -36,6 +36,16 @@ Runtime and automation pins follow the acceptance policy in `docs/SUPPLY_CHAIN.m
 5. Reconcile locks with the package manager; never edit lockfile checksums manually.
 6. Run `make check` and inspect the diff for unexpected generated changes.
 7. Commit with SSH signing and publish through a pull request after the initial repository bootstrap.
+
+## Release flow
+
+Release Please maintains the version and changelog through a release pull request. Its workflow is
+configured to skip GitHub release creation so that it cannot bypass the repository's signed-tag
+gate. Review each automation-created release pull request before approving its CI workflows. After
+the release pull request is squash-merged and all required checks pass on `main`, create and push an
+SSH-signed annotated version tag. The tag-triggered release workflow verifies that the tag targets
+protected `main`, repeats `make check`, builds the artifacts and material manifest, attests their
+provenance, and publishes the immutable GitHub release.
 
 ## Generated documentation
 
