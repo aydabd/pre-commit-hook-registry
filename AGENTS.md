@@ -15,5 +15,8 @@ or release automation.
   available check and state exactly what remains for CI.
 - Do not publish a release or change GitHub security settings unless explicitly requested.
 
-There are no repository-specific agent skills. Tool-specific operating instructions belong to the
-tooling environment, not this repository.
+The reusable GitHub roadmap workflow is defined in
+[`.agents/skills/manage-github-roadmaps/SKILL.md`](.agents/skills/manage-github-roadmaps/SKILL.md).
+It governs operational planning in GitHub Projects and Issues; it does not override the repository
+sources of truth or the maintenance and security requirements linked above. Other tool-specific
+operating instructions belong to the tooling environment, not this repository.

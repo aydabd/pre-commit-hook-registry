@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Roadmap Orchestrator"
+  short_description: "Create and govern readable GitHub roadmaps"
+  default_prompt: "Use $manage-github-roadmaps to audit this repository and propose or maintain its GitHub roadmap."
