@@ -1,5 +1,6 @@
 """Catalog schema and packaged resource tests."""
 
+import re
 from pathlib import Path
 
 import pytest
@@ -26,15 +27,23 @@ def test_catalog_uses_only_registered_adapter_mechanisms() -> None:
 
 
 def test_every_admitted_upstream_records_a_disposition() -> None:
+    allowed = {"Proxy upstream", "Reviewed adapter", "Consumer-local/system hook", "Exclude"}
+    prefix = "- Disposition: "
     for upstream in Catalog.load().upstreams:
         review = Path(upstream.review_record).read_text(encoding="utf-8")
-        assert "\n- Disposition: " in review, upstream.name
+        dispositions = [line.removeprefix(prefix) for line in review.splitlines() if line.startswith(prefix)]
+        assert len(dispositions) == 1, upstream.name
+        assert dispositions[0] in allowed, upstream.name
 
 
 def test_unregistered_adapter_mechanism_is_rejected() -> None:
     text = Path("src/pre_commit_hook_registry/catalog.yaml").read_text(encoding="utf-8")
     text = text.replace("python-git-dependency", "shell-installer", 1)
-    with pytest.raises(ValueError, match="unregistered runtime_adapter"):
+    message = (
+        "upstream 'pre-commit-hooks' uses unregistered runtime_adapter 'shell-installer'; "
+        "registered adapters: golang-additional-dependency, python-git-dependency, python-package"
+    )
+    with pytest.raises(ValueError, match=re.escape(message)):
         Catalog.from_text(text)
 
 

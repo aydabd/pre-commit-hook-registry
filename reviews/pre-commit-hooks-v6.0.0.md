@@ -10,5 +10,6 @@
 - Tests: schema, drift, policy, representative hygiene execution planned/passed for release gate
 - Reviewer: aydabd
 - Review date: 2026-08-03
-- Disposition: proxy upstream through the reviewed full-SHA Python Git dependency
+- Disposition: Proxy upstream
+- Integration: reviewed full-SHA Python Git dependency
 - Decision: accepted for v0.1.0

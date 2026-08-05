@@ -82,7 +82,11 @@ class Upstream:
             raise ValueError(f"upstream '{name}' sha must be a lowercase full SHA")
         runtime_adapter = _string(value, "runtime_adapter")
         if runtime_adapter not in cls.RUNTIME_ADAPTERS:
-            raise ValueError(f"upstream '{name}' uses an unregistered runtime_adapter")
+            registered = ", ".join(sorted(cls.RUNTIME_ADAPTERS))
+            raise ValueError(
+                f"upstream '{name}' uses unregistered runtime_adapter "
+                f"'{runtime_adapter}'; registered adapters: {registered}"
+            )
         return cls(
             name=name,
             url=_string(value, "url"),

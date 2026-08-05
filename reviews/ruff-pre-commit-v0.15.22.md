@@ -10,5 +10,6 @@
 - Tests: check, fix, formatting, policy-safe arguments, and manifest parity required by release gate
 - Reviewer: aydabd
 - Review date: 2026-08-03
-- Disposition: reviewed adapter using the exact Python package instead of the wrapper repository
+- Disposition: Reviewed adapter
+- Integration: exact Python package instead of the wrapper repository
 - Decision: accepted for v0.1.0
