@@ -72,11 +72,15 @@ def test_release_please_only_prepares_release_pull_requests() -> None:
     steps = workflow["jobs"]["release-please"]["steps"]
 
     assert len(steps) == 1
-    assert steps[0]["with"]["skip-github-release"] is True
-    assert "skip-labeling" not in steps[0]["with"]
+    step = steps[0]
+    options = step.get("with", {})
+    assert step.get("uses", "").startswith("googleapis/release-please-action@")
+    assert options.get("skip-github-release") is True
+    assert "skip-labeling" not in options
 
 
 def test_release_publication_requires_a_version_tag() -> None:
     workflow = yaml.safe_load(Path(".github/workflows/release.yaml").read_text(encoding="utf-8"))
+    triggers = workflow.get("on", workflow.get(True))
 
-    assert workflow[True] == {"push": {"tags": ["v*.*.*"]}}
+    assert triggers == {"push": {"tags": ["v*.*.*"]}}
