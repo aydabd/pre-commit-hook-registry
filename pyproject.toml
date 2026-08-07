@@ -36,6 +36,7 @@ module-root = "src"
 
 [tool.pytest.ini_options]
 addopts = ["--strict-config", "--strict-markers"]
+markers = ["installed_examples: execute rendered consumer templates and their installed hooks"]
 testpaths = ["tests"]
 
 [tool.ruff]
