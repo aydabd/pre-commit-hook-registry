@@ -24,7 +24,7 @@ class ExampleFixture:
 
     clean_files: dict[str, str]
     failing_file: tuple[str, str]
-    failure_diagnostic: str
+    failure_hook_name: str
     forbidden_output: str | None = None
 
 
@@ -33,12 +33,12 @@ _EXAMPLES = {
     "minimal.yaml": ExampleFixture(
         clean_files={"data.yaml": "key: value\n", "notes.txt": "clean text\n"},
         failing_file=("broken.yaml", "key: [\n"),
-        failure_diagnostic="check yaml",
+        failure_hook_name="check yaml",
     ),
     "python.yaml": ExampleFixture(
         clean_files={"example.py": "answer = 42\n", "data.yaml": "key: value\n"},
         failing_file=("broken.py", "def broken(:\n"),
-        failure_diagnostic="ruff check",
+        failure_hook_name="ruff check",
     ),
     "security.yaml": ExampleFixture(
         clean_files={"notes.txt": "synthetic fixture with no credentials\n"},
@@ -46,7 +46,7 @@ _EXAMPLES = {
             "synthetic-test-key.pem",
             f"-----BEGIN RSA PRIVATE KEY-----\n{_FAKE_PRIVATE_KEY_BODY}\n-----END RSA PRIVATE KEY-----\n",
         ),
-        failure_diagnostic="detect private key",
+        failure_hook_name="detect private key",
         forbidden_output=_FAKE_PRIVATE_KEY_BODY,
     ),
 }
@@ -184,6 +184,7 @@ def test_installed_consumer_example(
     )
     output = failing.stdout + failing.stderr
     assert failing.returncode != 0, output
-    assert fixture.failure_diagnostic in output.lower(), output
+    # pre-commit reports the manifest's human-readable hook name, not its hook id.
+    assert fixture.failure_hook_name in output.lower(), output
     if fixture.forbidden_output is not None:
         assert fixture.forbidden_output not in output
