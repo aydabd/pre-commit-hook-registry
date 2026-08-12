@@ -10,6 +10,7 @@ Start with a tested template:
 - [`consumer-examples/minimal.yaml`](consumer-examples/minimal.yaml)
 - [`consumer-examples/python.yaml`](consumer-examples/python.yaml)
 - [`consumer-examples/security.yaml`](consumer-examples/security.yaml)
+- [`consumer-examples/node.yaml`](consumer-examples/node.yaml)
 
 Replace `<FULL_RELEASE_COMMIT_SHA>` with the commit behind a published release. Pin the commit, not
 the release tag. Run policy validation with:

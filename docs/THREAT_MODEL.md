@@ -8,4 +8,6 @@ Git host, package index, developer workstation, toolchain, or consumer-local Ruf
 Upstream source and dependency pins, lock verification, cooling periods, manual review, protected
 branches/tags, signed changes, and release attestations provide layered controls. Secrets must not
 be included in fixtures; Gitleaks integration data uses an obvious synthetic test value and redacted
-output. Windows and unreviewed ecosystems are outside v1 support.
+output. The admitted Node path trusts the exact npm registry tarballs and consumer Biome configuration,
+but does not permit lifecycle scripts, dynamic plugins, or execution-time package downloads. Windows
+and unreviewed ecosystems are outside v1 support.

@@ -58,12 +58,22 @@ class Upstream:
     runtime_adapter: str
     approved_ids: tuple[str, ...]
     review_record: str
+    runtime_packages: tuple[tuple[str, str, str], ...]
 
     FIELDS: ClassVar[frozenset[str]] = frozenset(
-        {"url", "tag", "sha", "license", "runtime_adapter", "approved_ids", "review_record"}
+        {
+            "url",
+            "tag",
+            "sha",
+            "license",
+            "runtime_adapter",
+            "runtime_packages",
+            "approved_ids",
+            "review_record",
+        }
     )
     RUNTIME_ADAPTERS: ClassVar[frozenset[str]] = frozenset(
-        {"golang-additional-dependency", "python-git-dependency", "python-package"}
+        {"golang-additional-dependency", "node-package", "python-git-dependency", "python-package"}
     )
 
     @classmethod
@@ -87,6 +97,21 @@ class Upstream:
                 f"upstream '{name}' uses unregistered runtime_adapter "
                 f"'{runtime_adapter}'; registered adapters: {registered}"
             )
+        packages = value["runtime_packages"]
+        if not isinstance(packages, list):
+            raise ValueError(f"upstream '{name}' runtime_packages must be a list")
+        parsed_packages: list[tuple[str, str, str]] = []
+        for package in packages:
+            if not isinstance(package, dict) or set(package) != {"name", "version", "integrity"}:
+                raise ValueError(f"upstream '{name}' runtime package has missing or unknown fields")
+            package_name = _string(package, "name")
+            package_version = _string(package, "version")
+            package_integrity = _string(package, "integrity")
+            if not package_integrity.startswith("sha512-"):
+                raise ValueError(f"upstream '{name}' runtime package integrity must be sha512")
+            parsed_packages.append((package_name, package_version, package_integrity))
+        if len(parsed_packages) != len({item[0] for item in parsed_packages}):
+            raise ValueError(f"upstream '{name}' runtime package names must be unique")
         return cls(
             name=name,
             url=_string(value, "url"),
@@ -96,6 +121,7 @@ class Upstream:
             runtime_adapter=runtime_adapter,
             approved_ids=tuple(ids),
             review_record=_string(value, "review_record"),
+            runtime_packages=tuple(parsed_packages),
         )
 
 

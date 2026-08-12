@@ -9,6 +9,7 @@ upstreams:
     sha: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c
     license: MIT
     runtime_adapter: python-git-dependency
+    runtime_packages: []
     approved_ids:
       - check-added-large-files
       - check-case-conflict
@@ -29,6 +30,7 @@ upstreams:
     sha: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e
     license: MIT
     runtime_adapter: golang-additional-dependency
+    runtime_packages: []
     approved_ids: [gitleaks]
     review_record: reviews/gitleaks-v8.30.1.md
   ruff-pre-commit:
@@ -37,5 +39,42 @@ upstreams:
     sha: 2700fd5671c633760d912769c041bfcde2b9a01b
     license: MIT
     runtime_adapter: python-package
+    runtime_packages: []
     approved_ids: [ruff-check, ruff-format]
     review_record: reviews/ruff-pre-commit-v0.15.22.md
+  biome-pre-commit:
+    url: https://github.com/biomejs/pre-commit
+    tag: v2.5.6
+    sha: cd5d6ed44598e228e214b704d673541d9675f8e4
+    license: MIT
+    runtime_adapter: node-package
+    runtime_packages:
+      - name: '@biomejs/biome'
+        version: 2.5.6
+        integrity: sha512-lxVNjv7UF6KfhMJfL9gaUHbWdJdHbsAj6OSmwSYNdhRuG67NxNQ4Xdvh3TUxsSK9sBzJBQhEJj3AopmmNJ5pSA==
+      - name: '@biomejs/cli-darwin-arm64'
+        version: 2.5.6
+        integrity: sha512-zMOLZP4oMrjh6m1zcSj1ud2awUPgTuMVbmQhYYWL7J8HwCnbHHBvTm7VBTRuY7epT5bez76IpKYQ11ZAqHFlnw==
+      - name: '@biomejs/cli-darwin-x64'
+        version: 2.5.6
+        integrity: sha512-JAC1VqzvO7Th5ZplU0G2uGfkZbxEe9uDDektPAhF0JLusoz1w+T4okp2bkykI0bbaO2vslKiRfj4gU43JaGreA==
+      - name: '@biomejs/cli-linux-arm64'
+        version: 2.5.6
+        integrity: sha512-6XsYwCFkp5sMxl85ffhgeGpGgs6A7dRYFnkceZ7WVxvycuTnGdD5xa534Z3xfrBQ0JCMK/mujT6ZNPJoghedwg==
+      - name: '@biomejs/cli-linux-arm64-musl'
+        version: 2.5.6
+        integrity: sha512-eUa3jeeYvfMt19LBeh6E5PUZpxnTC4JqNWo+EDjTtQjAr2xLGnWaxACtVU1DQqmHYbvThlJzLX+ZsYgrqh2qVw==
+      - name: '@biomejs/cli-linux-x64'
+        version: 2.5.6
+        integrity: sha512-Pop9VXCFUhFTMfFefZ39S+u2rOPyNp5iHlxbZRwXGACHLy2r0jjiRgJHmaEKJzL3SyxlVeGShXhvvElvWowonA==
+      - name: '@biomejs/cli-linux-x64-musl'
+        version: 2.5.6
+        integrity: sha512-2Vp13QdKysH3HIWLaYLhUUwbK+jbZonJD1K+Lr0d0RO4wH7mkYd43vJixEDm8cUWrowoRz4UUHF1nm9Ae7ym8A==
+      - name: '@biomejs/cli-win32-arm64'
+        version: 2.5.6
+        integrity: sha512-tDGshcm6BdkZOCGnTDX0Y8/U4IfBSlnUU7T56nNDuPEfed+aHg+u8G36NB43fJVl0Os6+QURXIE1yuD7AaEofA==
+      - name: '@biomejs/cli-win32-x64'
+        version: 2.5.6
+        integrity: sha512-WN05KwXnTO/2J45RQPvzZMXf7tZUIofHoR35xIPfCo7pQ2RFidxI8sfb5mGsaTxdMmEOzHzOPRCdA5/fCpc7xQ==
+    approved_ids: [biome-ci]
+    review_record: reviews/biome-pre-commit-v2.5.6.md

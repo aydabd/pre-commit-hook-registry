@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,6 +50,11 @@ _EXAMPLES = {
         failure_hook_name="detect private key",
         forbidden_output=_FAKE_PRIVATE_KEY_BODY,
     ),
+    "node.yaml": ExampleFixture(
+        clean_files={"src/good.js": "const answer = 42;\n", "notes.txt": "ignored by Biome\n"},
+        failing_file=("src/bad.js", "const answer = ;\n"),
+        failure_hook_name="biome ci",
+    ),
 }
 
 
@@ -87,6 +93,15 @@ def _write_files(root: Path, files: dict[str, str]) -> None:
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(contents, encoding="utf-8")
+
+
+def _snapshot_consumer_files(root: Path) -> dict[str, bytes]:
+    """Capture consumer files while excluding Git's mutable administrative directory."""
+    return {
+        str(path.relative_to(root)): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file() and ".git" not in path.relative_to(root).parts
+    }
 
 
 def test_every_consumer_example_has_an_execution_fixture() -> None:
@@ -154,17 +169,48 @@ def test_installed_consumer_example(
         assert result.returncode == 0, result.stderr
 
     _write_files(tmp_path, fixture.clean_files)
+    if example_name == "node.yaml":
+        _write_files(
+            tmp_path,
+            {f"src/large/file-{index:03d}.js": "const value = 42;\n" for index in range(500)},
+        )
     result = _run([git, "add", "."], cwd=tmp_path, environment=environment)
     assert result.returncode == 0, result.stderr
 
+    install_started = time.perf_counter()
     install = _run([pre_commit, "install-hooks"], cwd=tmp_path, environment=environment)
+    install_elapsed = time.perf_counter() - install_started
     assert install.returncode == 0, install.stdout + install.stderr
     clean = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
         cwd=tmp_path,
-        environment=environment,
+        environment={
+            **environment,
+            "HTTP_PROXY": "http://127.0.0.1:9",
+            "HTTPS_PROXY": "http://127.0.0.1:9",
+            "ALL_PROXY": "http://127.0.0.1:9",
+            "NO_PROXY": "",
+        },
     )
+    cold_elapsed = install_elapsed + (time.perf_counter() - install_started)
     assert clean.returncode == 0, clean.stdout + clean.stderr
+    clean_snapshot = _snapshot_consumer_files(tmp_path)
+    if example_name == "node.yaml":
+        warm_elapsed = []
+        for _ in range(5):
+            started = time.perf_counter()
+            warm = _run(
+                [pre_commit, "run", "--all-files", "--color", "never"],
+                cwd=tmp_path,
+                environment=environment,
+            )
+            warm_elapsed.append(time.perf_counter() - started)
+            assert warm.returncode == 0, warm.stdout + warm.stderr
+        print(
+            f"biome performance: cold={cold_elapsed:.3f}s warm={[round(value, 3) for value in warm_elapsed]}"
+        )
+        assert cold_elapsed <= 5
+        assert max(warm_elapsed) <= 2
 
     result = _run(
         [git, "commit", "--quiet", "--no-verify", "-m", "clean fixture"],
@@ -180,7 +226,13 @@ def test_installed_consumer_example(
     failing = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
         cwd=tmp_path,
-        environment=environment,
+        environment={
+            **environment,
+            "HTTP_PROXY": "http://127.0.0.1:9",
+            "HTTPS_PROXY": "http://127.0.0.1:9",
+            "ALL_PROXY": "http://127.0.0.1:9",
+            "NO_PROXY": "",
+        },
     )
     output = failing.stdout + failing.stderr
     assert failing.returncode != 0, output
@@ -188,3 +240,4 @@ def test_installed_consumer_example(
     assert fixture.failure_hook_name in output.lower(), output
     if fixture.forbidden_output is not None:
         assert fixture.forbidden_output not in output
+    assert _snapshot_consumer_files(tmp_path) == clean_snapshot

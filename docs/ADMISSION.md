@@ -49,8 +49,11 @@ Registered adapter mechanisms are enforced by the catalog model. An adapter must
 - reconcile the catalog, public manifest, lockfiles, generated catalog, review record, and installed-hook
   tests in one reviewed change.
 
-The currently registered mechanisms are `python-git-dependency`, `python-package`, and
-`golang-additional-dependency`. Adding a mechanism is an architecture change: update this contract, the
+The currently registered mechanisms are `python-git-dependency`, `python-package`,
+`golang-additional-dependency`, and `node-package`. The Node mechanism uses the repository's exact
+`package.json` plus committed `package-lock.json`; it installs only the lock-declared graph during
+pre-commit environment preparation, with no consumer `additional_dependencies` and no lifecycle
+script or package-manager activity during hook execution. Adding a mechanism is an architecture change: update this contract, the
 catalog model, threat analysis when its boundary changes, and tests before using it.
 
 ## Stage and performance classification
