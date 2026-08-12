@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "Immutable Node runtime dependencies for the pre-commit hook registry",
+  "bin": {
+    "biome": "node_modules/@biomejs/biome/bin/biome"
+  },
   "dependencies": {
     "@biomejs/biome": "2.5.6"
   }
