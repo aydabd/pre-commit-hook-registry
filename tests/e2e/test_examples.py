@@ -177,6 +177,7 @@ def test_installed_consumer_example(
     install = _run([pre_commit, "install-hooks"], cwd=tmp_path, environment=environment)
     install_elapsed = time.perf_counter() - install_started
     assert install.returncode == 0, install.stdout + install.stderr
+    clean_snapshot = _snapshot_consumer_files(tmp_path)
     cold_started = time.perf_counter()
     clean = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
@@ -191,6 +192,7 @@ def test_installed_consumer_example(
     )
     cold_elapsed = time.perf_counter() - cold_started
     assert clean.returncode == 0, clean.stdout + clean.stderr
+    assert _snapshot_consumer_files(tmp_path) == clean_snapshot
     if example_name == "node.yaml":
         warm_elapsed = []
         for _ in range(5):
@@ -208,6 +210,7 @@ def test_installed_consumer_example(
             )
             warm_elapsed.append(time.perf_counter() - started)
             assert warm.returncode == 0, warm.stdout + warm.stderr
+        assert _snapshot_consumer_files(tmp_path) == clean_snapshot
         print(
             f"biome performance: preparation={install_elapsed:.3f}s cold={cold_elapsed:.3f}s "
             f"warm={[round(value, 3) for value in warm_elapsed]}"
@@ -220,6 +223,7 @@ def test_installed_consumer_example(
         )
         result = _run([git, "add", "."], cwd=tmp_path, environment=environment)
         assert result.returncode == 0, result.stderr
+        large_snapshot = _snapshot_consumer_files(tmp_path)
         large_elapsed = []
         for _ in range(6):
             started = time.perf_counter()
@@ -236,6 +240,7 @@ def test_installed_consumer_example(
             )
             large_elapsed.append(time.perf_counter() - started)
             assert large.returncode == 0, large.stdout + large.stderr
+        assert _snapshot_consumer_files(tmp_path) == large_snapshot
         print(
             f"biome 500-file performance: cold={large_elapsed[0]:.3f}s "
             f"warm={[round(value, 3) for value in large_elapsed[1:]]}"
