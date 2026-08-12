@@ -179,7 +179,6 @@ def test_installed_consumer_example(
 
     install_started = time.perf_counter()
     install = _run([pre_commit, "install-hooks"], cwd=tmp_path, environment=environment)
-    install_elapsed = time.perf_counter() - install_started
     assert install.returncode == 0, install.stdout + install.stderr
     clean = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
@@ -192,7 +191,7 @@ def test_installed_consumer_example(
             "NO_PROXY": "",
         },
     )
-    cold_elapsed = install_elapsed + (time.perf_counter() - install_started)
+    cold_elapsed = time.perf_counter() - install_started
     assert clean.returncode == 0, clean.stdout + clean.stderr
     clean_snapshot = _snapshot_consumer_files(tmp_path)
     if example_name == "node.yaml":
@@ -202,7 +201,13 @@ def test_installed_consumer_example(
             warm = _run(
                 [pre_commit, "run", "--all-files", "--color", "never"],
                 cwd=tmp_path,
-                environment=environment,
+                environment={
+                    **environment,
+                    "HTTP_PROXY": "http://127.0.0.1:9",
+                    "HTTPS_PROXY": "http://127.0.0.1:9",
+                    "ALL_PROXY": "http://127.0.0.1:9",
+                    "NO_PROXY": "",
+                },
             )
             warm_elapsed.append(time.perf_counter() - started)
             assert warm.returncode == 0, warm.stdout + warm.stderr
