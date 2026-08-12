@@ -46,6 +46,7 @@ def test_node_runtime_lock_matches_catalog_and_has_no_unreviewed_packages() -> N
         assert package["integrity"] == integrity
     assert set(expected) == {path.removeprefix("node_modules/") for path in lock["packages"] if path}
     assert "scripts" not in Path("package.json").read_text(encoding="utf-8")
+    assert Path(".npmrc").read_text(encoding="utf-8") == "ignore-scripts=true\n"
 
 
 def test_gitleaks_uses_declared_go_module_at_reviewed_sha() -> None:

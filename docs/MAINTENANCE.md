@@ -11,7 +11,7 @@ contribution guide, and the README link here rather than restating these instruc
 | Executable hook behavior | `.pre-commit-hooks.yaml` | Manifest drift tests |
 | Consumer policy | `src/pre_commit_hook_registry/validator.py` | Consumer examples and policy tests |
 | Python dependencies and supported Python versions | `pyproject.toml` and `uv.lock` | CI matrices |
-| Node runtime package graph and integrity | `package.json` and `package-lock.json` | Catalog runtime package metadata and CI matrices |
+| Node runtime package graph, integrity, and lifecycle policy | `package.json`, `package-lock.json`, and `.npmrc` | Catalog runtime package metadata and CI matrices |
 | Go toolchain and module integrity | `go.mod` and `go.sum` | CI setup |
 | Upstream update discovery | `upstream/.pre-commit-config.yaml` and `.github/dependabot.yml` | Dependabot pull requests |
 | Upstream acceptance evidence | `reviews/*.md` | Generated catalog links |
