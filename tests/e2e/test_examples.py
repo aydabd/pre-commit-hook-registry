@@ -175,7 +175,9 @@ def test_installed_consumer_example(
 
     install_started = time.perf_counter()
     install = _run([pre_commit, "install-hooks"], cwd=tmp_path, environment=environment)
+    install_elapsed = time.perf_counter() - install_started
     assert install.returncode == 0, install.stdout + install.stderr
+    cold_started = time.perf_counter()
     clean = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
         cwd=tmp_path,
@@ -187,7 +189,7 @@ def test_installed_consumer_example(
             "NO_PROXY": "",
         },
     )
-    cold_elapsed = time.perf_counter() - install_started
+    cold_elapsed = time.perf_counter() - cold_started
     assert clean.returncode == 0, clean.stdout + clean.stderr
     clean_snapshot = _snapshot_consumer_files(tmp_path)
     if example_name == "node.yaml":
@@ -208,7 +210,8 @@ def test_installed_consumer_example(
             warm_elapsed.append(time.perf_counter() - started)
             assert warm.returncode == 0, warm.stdout + warm.stderr
         print(
-            f"biome performance: cold={cold_elapsed:.3f}s warm={[round(value, 3) for value in warm_elapsed]}"
+            f"biome performance: preparation={install_elapsed:.3f}s cold={cold_elapsed:.3f}s "
+            f"warm={[round(value, 3) for value in warm_elapsed]}"
         )
         assert cold_elapsed <= 5
         assert max(warm_elapsed) <= 2
