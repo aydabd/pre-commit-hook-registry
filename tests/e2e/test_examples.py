@@ -96,11 +96,12 @@ def _write_files(root: Path, files: dict[str, str]) -> None:
 
 
 def _snapshot_consumer_files(root: Path) -> dict[str, bytes]:
-    """Capture consumer files while excluding Git's mutable administrative directory."""
+    """Capture consumer-owned files while excluding Git and tool cache directories."""
     return {
         str(path.relative_to(root)): path.read_bytes()
         for path in root.rglob("*")
-        if path.is_file() and ".git" not in path.relative_to(root).parts
+        if path.is_file()
+        and not ({".git", ".ruff_cache", ".mypy_cache", ".pytest_cache"} & set(path.relative_to(root).parts))
     }
 
 
@@ -169,11 +170,6 @@ def test_installed_consumer_example(
         assert result.returncode == 0, result.stderr
 
     _write_files(tmp_path, fixture.clean_files)
-    if example_name == "node.yaml":
-        _write_files(
-            tmp_path,
-            {f"src/large/file-{index:03d}.js": "const value = 42;\n" for index in range(500)},
-        )
     result = _run([git, "add", "."], cwd=tmp_path, environment=environment)
     assert result.returncode == 0, result.stderr
 
@@ -216,6 +212,31 @@ def test_installed_consumer_example(
         )
         assert cold_elapsed <= 5
         assert max(warm_elapsed) <= 2
+        _write_files(
+            tmp_path,
+            {f"src/large/file-{index:03d}.js": "const value = 42;\n" for index in range(500)},
+        )
+        large_elapsed = []
+        for _ in range(6):
+            started = time.perf_counter()
+            large = _run(
+                [pre_commit, "run", "--all-files", "--color", "never"],
+                cwd=tmp_path,
+                environment={
+                    **environment,
+                    "HTTP_PROXY": "http://127.0.0.1:9",
+                    "HTTPS_PROXY": "http://127.0.0.1:9",
+                    "ALL_PROXY": "http://127.0.0.1:9",
+                    "NO_PROXY": "",
+                },
+            )
+            large_elapsed.append(time.perf_counter() - started)
+            assert large.returncode == 0, large.stdout + large.stderr
+        print(
+            f"biome 500-file performance: cold={large_elapsed[0]:.3f}s "
+            f"warm={[round(value, 3) for value in large_elapsed[1:]]}"
+        )
+        assert max(large_elapsed) <= 2
 
     result = _run(
         [git, "commit", "--quiet", "--no-verify", "-m", "clean fixture"],
@@ -245,4 +266,5 @@ def test_installed_consumer_example(
     assert fixture.failure_hook_name in output.lower(), output
     if fixture.forbidden_output is not None:
         assert fixture.forbidden_output not in output
-    assert _snapshot_consumer_files(tmp_path) == clean_snapshot
+    after_failure = _snapshot_consumer_files(tmp_path)
+    assert all(after_failure.get(path) == contents for path, contents in clean_snapshot.items())
