@@ -47,6 +47,43 @@ def test_unregistered_adapter_mechanism_is_rejected() -> None:
         Catalog.from_text(text)
 
 
+def _valid_upstream_mapping() -> dict[str, object]:
+    return {
+        "url": "https://example.invalid/upstream",
+        "tag": "v1.0.0",
+        "sha": "a" * 40,
+        "license": "MIT",
+        "runtime_adapter": "node-package",
+        "runtime_packages": [],
+        "approved_ids": ["example"],
+        "review_record": "reviews/example.md",
+    }
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda value: value.update(runtime_packages="not-a-list"),
+        lambda value: value.update(runtime_packages=[{"name": "pkg", "version": "1.0.0"}]),
+        lambda value: value.update(
+            runtime_packages=[{"name": "pkg", "version": "1.0.0", "integrity": "sha256-nope"}]
+        ),
+        lambda value: value.update(
+            runtime_packages=[
+                {"name": "pkg", "version": "1.0.0", "integrity": "sha512-one"},
+                {"name": "pkg", "version": "1.0.0", "integrity": "sha512-two"},
+            ]
+        ),
+    ],
+    ids=["packages-not-list", "package-fields", "package-integrity", "duplicate-package"],
+)
+def test_invalid_runtime_packages_are_rejected(mutate: object) -> None:
+    value = _valid_upstream_mapping()
+    mutate(value)  # type: ignore[operator]
+    with pytest.raises(ValueError):
+        Upstream.from_mapping("example", value)
+
+
 @pytest.mark.parametrize(
     "text",
     [

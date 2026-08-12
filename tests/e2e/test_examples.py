@@ -191,7 +191,6 @@ def test_installed_consumer_example(
     )
     cold_elapsed = time.perf_counter() - cold_started
     assert clean.returncode == 0, clean.stdout + clean.stderr
-    clean_snapshot = _snapshot_consumer_files(tmp_path)
     if example_name == "node.yaml":
         warm_elapsed = []
         for _ in range(5):
@@ -219,6 +218,8 @@ def test_installed_consumer_example(
             tmp_path,
             {f"src/large/file-{index:03d}.js": "const value = 42;\n" for index in range(500)},
         )
+        result = _run([git, "add", "."], cwd=tmp_path, environment=environment)
+        assert result.returncode == 0, result.stderr
         large_elapsed = []
         for _ in range(6):
             started = time.perf_counter()
@@ -251,6 +252,7 @@ def test_installed_consumer_example(
     _write_files(tmp_path, {failing_name: failing_contents})
     result = _run([git, "add", "."], cwd=tmp_path, environment=environment)
     assert result.returncode == 0, result.stderr
+    expected_failure_snapshot = _snapshot_consumer_files(tmp_path)
 
     failing = _run(
         [pre_commit, "run", "--all-files", "--color", "never"],
@@ -270,4 +272,4 @@ def test_installed_consumer_example(
     if fixture.forbidden_output is not None:
         assert fixture.forbidden_output not in output
     after_failure = _snapshot_consumer_files(tmp_path)
-    assert all(after_failure.get(path) == contents for path, contents in clean_snapshot.items())
+    assert after_failure == expected_failure_snapshot
