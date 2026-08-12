@@ -11,7 +11,7 @@ from pre_commit_hook_registry.models import Catalog, Upstream, load_unique_yaml
 def test_packaged_catalog_is_complete() -> None:
     catalog = Catalog.load()
     assert catalog.registry_url == "https://github.com/aydabd/pre-commit-hook-registry"
-    assert len(catalog.upstreams) == 3
+    assert len(catalog.upstreams) == 4
     assert {"gitleaks", "ruff-check", "check-yaml"} <= catalog.approved_ids
 
 
@@ -41,10 +41,47 @@ def test_unregistered_adapter_mechanism_is_rejected() -> None:
     text = text.replace("python-git-dependency", "shell-installer", 1)
     message = (
         "upstream 'pre-commit-hooks' uses unregistered runtime_adapter 'shell-installer'; "
-        "registered adapters: golang-additional-dependency, python-git-dependency, python-package"
+        "registered adapters: golang-additional-dependency, node-package, python-git-dependency, python-package"
     )
     with pytest.raises(ValueError, match=re.escape(message)):
         Catalog.from_text(text)
+
+
+def _valid_upstream_mapping() -> dict[str, object]:
+    return {
+        "url": "https://example.invalid/upstream",
+        "tag": "v1.0.0",
+        "sha": "a" * 40,
+        "license": "MIT",
+        "runtime_adapter": "node-package",
+        "runtime_packages": [],
+        "approved_ids": ["example"],
+        "review_record": "reviews/example.md",
+    }
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda value: value.update(runtime_packages="not-a-list"),
+        lambda value: value.update(runtime_packages=[{"name": "pkg", "version": "1.0.0"}]),
+        lambda value: value.update(
+            runtime_packages=[{"name": "pkg", "version": "1.0.0", "integrity": "sha256-nope"}]
+        ),
+        lambda value: value.update(
+            runtime_packages=[
+                {"name": "pkg", "version": "1.0.0", "integrity": "sha512-one"},
+                {"name": "pkg", "version": "1.0.0", "integrity": "sha512-two"},
+            ]
+        ),
+    ],
+    ids=["packages-not-list", "package-fields", "package-integrity", "duplicate-package"],
+)
+def test_invalid_runtime_packages_are_rejected(mutate: object) -> None:
+    value = _valid_upstream_mapping()
+    mutate(value)  # type: ignore[operator]
+    with pytest.raises(ValueError):
+        Upstream.from_mapping("example", value)
 
 
 @pytest.mark.parametrize(

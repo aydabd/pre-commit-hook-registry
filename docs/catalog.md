@@ -6,6 +6,16 @@
 - Repository: [https://github.com/aydabd/pre-commit-hook-registry](https://github.com/aydabd/pre-commit-hook-registry)
 - Required hook IDs: `validate-registry-config`
 
+## biome-pre-commit
+
+- Upstream: [https://github.com/biomejs/pre-commit](https://github.com/biomejs/pre-commit)
+- Reviewed tag: `v2.5.6`
+- Commit: `cd5d6ed44598e228e214b704d673541d9675f8e4`
+- License: `MIT`
+- Adapter: `node-package`
+- Review: [reviews/biome-pre-commit-v2.5.6.md](../reviews/biome-pre-commit-v2.5.6.md)
+- Hook IDs: `biome-ci`
+
 ## gitleaks
 
 - Upstream: [https://github.com/gitleaks/gitleaks](https://github.com/gitleaks/gitleaks)

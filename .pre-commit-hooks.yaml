@@ -121,3 +121,12 @@
   require_serial: true
   minimum_pre_commit_version: "2.9.2"
   additional_dependencies: ["ruff==0.15.22"]
+# Upstream biomejs/pre-commit v2.5.6: cd5d6ed44598e228e214b704d673541d9675f8e4
+- id: biome-ci
+  name: biome ci
+  description: Run Biome checks without writing files
+  entry: biome ci --files-ignore-unknown=true --no-errors-on-unmatched
+  language: node
+  types: [text]
+  files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
+  require_serial: true

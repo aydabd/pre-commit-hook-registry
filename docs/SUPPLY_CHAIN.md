@@ -7,6 +7,9 @@ widely used guidance; it is not a claim of third-party certification.
 
 - Every dependency and GitHub Action is immutable: package versions are exact, Git sources use full
   commit SHAs, Actions use full commit SHAs, and ecosystem checksums are committed.
+- The registered Node mechanism uses only the repository package manifest and committed npm lockfile;
+  the checked-in `.npmrc` enforces `ignore-scripts=true`, while lifecycle scripts and consumer-supplied
+  additional dependencies are not part of the hook contract.
 - Ordinary updates wait at least 14 full days after publication. A security update may bypass the
   cooling period only when its review record identifies the advisory, urgency, and compensating
   verification.
