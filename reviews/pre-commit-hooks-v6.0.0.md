@@ -1,5 +1,6 @@
 # Review: pre-commit-hooks v6.0.0
 
+- Upstream: `https://github.com/pre-commit/pre-commit-hooks`
 - Tag resolution: `v6.0.0` → `3e8a8703264a2f4a69428a0aa4dcb512790b2c8c`
 - Release/cooling period: passed before initial selection
 - License: MIT

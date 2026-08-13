@@ -72,3 +72,25 @@ def test_biome_manifest_is_the_upstream_check_only_hook() -> None:
         "require_serial": True,
     }
     assert not {item["id"] for item in manifest} & {"biome-check", "biome-format", "biome-lint"}
+
+
+def test_every_review_identity_and_disposition_match_catalog_and_manifest() -> None:
+    catalog = Catalog.load()
+    manifest = yaml.safe_load(Path(".pre-commit-hooks.yaml").read_text(encoding="utf-8"))
+    allowed_dispositions = {"Proxy upstream", "Reviewed adapter", "Consumer-local/system hook", "Exclude"}
+
+    for upstream in catalog.upstreams:
+        review = Path(upstream.review_record).read_text(encoding="utf-8")
+        dispositions = [
+            line.removeprefix("- Disposition: ")
+            for line in review.splitlines()
+            if line.startswith("- Disposition: ")
+        ]
+
+        assert f"- Upstream: `{upstream.url}`" in review
+        assert f"`{upstream.tag}`" in review
+        assert upstream.sha in review
+        assert "- License:" in review
+        assert len(dispositions) == 1
+        assert dispositions[0] in allowed_dispositions
+        assert {hook["id"] for hook in manifest} >= set(upstream.approved_ids)

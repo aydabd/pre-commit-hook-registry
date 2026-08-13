@@ -1,5 +1,6 @@
 # Review: ruff-pre-commit v0.15.22
 
+- Upstream: `https://github.com/astral-sh/ruff-pre-commit`
 - Tag resolution: `v0.15.22` → `2700fd5671c633760d912769c041bfcde2b9a01b`
 - Release/cooling period: passed; v0.16.0 deferred due to breaking default-rule changes
 - License: MIT

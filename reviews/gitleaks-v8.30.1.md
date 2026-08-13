@@ -1,5 +1,6 @@
 # Review: Gitleaks v8.30.1
 
+- Upstream: `https://github.com/gitleaks/gitleaks`
 - Tag resolution: `v8.30.1` → `83d9cd684c87d95d656c1458ef04895a7f1cbd8e`
 - Release/cooling period: passed before initial selection
 - License: MIT
