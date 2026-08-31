@@ -15,7 +15,7 @@ dependencies = ["PyYAML==6.0.3", "typing-extensions==4.16.0"]
 [dependency-groups]
 dev = [
   "coverage[toml]==7.15.2",
-  "pre-commit==4.6.1",
+  "pre-commit==4.6.2",
   "pyright==1.1.411",
   "pytest==9.1.1",
   "pytest-cov==7.1.0",
