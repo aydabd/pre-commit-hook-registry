@@ -28,7 +28,7 @@ def render_catalog(catalog: Catalog) -> str:
                 "- Hook IDs: " + ", ".join(f"`{item}`" for item in upstream.approved_ids) + "\n\n",
             ]
         )
-    return "".join(lines)
+    return "".join(lines).rstrip() + "\n"
 
 
 def generate_catalog_document(output_path: Path) -> None:

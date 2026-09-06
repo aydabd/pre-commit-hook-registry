@@ -6,6 +6,10 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: 83d9cd684c87d95d656c1458ef04895a7f1cbd8e
+    hooks:
+      - id: gitleaks
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: 2700fd5671c633760d912769c041bfcde2b9a01b
     hooks:
