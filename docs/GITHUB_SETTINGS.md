@@ -25,5 +25,15 @@ on force-push and deletion. The repository-role bypass remains available for sol
 continuity; ordinary changes, including dependency updates, still use the reviewed pull-request flow
 and require a manual maintainer merge.
 
+The `Protect main` ruleset requires these status checks:
+
+- `quality`
+- `python (3.10)`
+- `python (3.14)`
+- `installed-hooks (ubuntu-latest, 22)`
+- `installed-hooks (ubuntu-latest, 24)`
+- `installed-hooks (macos-latest, 22)`
+- `installed-hooks (macos-latest, 24)`
+
 Protect release tags from updates and deletion. Releases must originate from the signed-tag workflow
 defined in `.github/workflows/release.yaml`.
