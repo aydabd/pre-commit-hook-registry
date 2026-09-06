@@ -5,18 +5,38 @@ updates:
     schedule: {interval: weekly}
     cooldown: {default-days: 14}
     reviewers: [aydabd]
+    groups:
+      pre-commit-upstream:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
   - package-ecosystem: uv
     directory: /
     schedule: {interval: weekly}
     cooldown: {default-days: 14}
     reviewers: [aydabd]
+    groups:
+      uv-development:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
   - package-ecosystem: gomod
     directory: /
     schedule: {interval: weekly}
     cooldown: {default-days: 14}
     reviewers: [aydabd]
+    groups:
+      go-modules:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule: {interval: weekly}
     cooldown: {default-days: 14}
     reviewers: [aydabd]
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
