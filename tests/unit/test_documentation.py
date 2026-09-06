@@ -2,7 +2,11 @@
 
 from pathlib import Path
 
-from pre_commit_hook_registry.documentation import generate_catalog_document, render_catalog
+from pre_commit_hook_registry.documentation import (
+    _normalize_catalog_output,  # pyright: ignore[reportPrivateUsage]
+    generate_catalog_document,
+    render_catalog,
+)
 from pre_commit_hook_registry.models import Catalog
 
 
@@ -15,3 +19,7 @@ def test_generate_catalog_document(tmp_path: Path) -> None:
     generate_catalog_document(destination)
     assert "Gitleaks" not in destination.read_text(encoding="utf-8")
     assert "gitleaks" in destination.read_text(encoding="utf-8")
+
+
+def test_normalize_catalog_output_preserves_trailing_spaces() -> None:
+    assert _normalize_catalog_output("content  \n\n") == "content  \n"
