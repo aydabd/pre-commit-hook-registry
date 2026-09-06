@@ -32,4 +32,5 @@ An alternate configuration path may be supplied as the final argument.
 - [Contributing](CONTRIBUTING.md) describes the contribution entry point.
 - [Security policy](SECURITY.md) explains private vulnerability reporting.
 
-Local verification starts with `uv sync --all-groups --locked`, followed by `make check`.
+Local verification requires `uv` and Go 1.26.5, which is used by the reviewed Gitleaks hook and
+`go mod verify`. Start with `uv sync --all-groups --locked`, followed by `make check`.

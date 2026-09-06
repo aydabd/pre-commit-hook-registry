@@ -5,6 +5,11 @@ from pathlib import Path
 from pre_commit_hook_registry.models import Catalog
 
 
+def _normalize_catalog_output(text: str) -> str:
+    """Ensure generated catalog output has exactly one trailing newline."""
+    return text.rstrip("\n") + "\n"
+
+
 def render_catalog(catalog: Catalog) -> str:
     """Render the public catalog reference as Markdown."""
     required = ", ".join(f"`{item}`" for item in sorted(catalog.required_ids))
@@ -28,7 +33,7 @@ def render_catalog(catalog: Catalog) -> str:
                 "- Hook IDs: " + ", ".join(f"`{item}`" for item in upstream.approved_ids) + "\n\n",
             ]
         )
-    return "".join(lines)
+    return _normalize_catalog_output("".join(lines))
 
 
 def generate_catalog_document(output_path: Path) -> None:

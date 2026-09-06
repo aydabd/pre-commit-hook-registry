@@ -45,4 +45,3 @@
 - Adapter: `python-package`
 - Review: [reviews/ruff-pre-commit-v0.15.22.md](../reviews/ruff-pre-commit-v0.15.22.md)
 - Hook IDs: `ruff-check`, `ruff-format`
-
