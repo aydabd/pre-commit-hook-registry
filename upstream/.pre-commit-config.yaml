@@ -9,5 +9,5 @@ repos:
     rev: v0.16.7
     hooks: [{id: ruff-check}]
   - repo: https://github.com/biomejs/pre-commit
-    rev: v2.5.12
+    rev: v2.5.13
     hooks: [{id: biome-ci}]
