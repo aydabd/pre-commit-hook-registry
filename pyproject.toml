@@ -15,7 +15,7 @@ dependencies = ["PyYAML==6.0.3", "typing-extensions==4.16.0"]
 [dependency-groups]
 dev = [
   "coverage[toml]==7.16.1",
-  "pre-commit==4.6.2",
+  "pre-commit==4.7.0; python_version >= '3.11'",
   "pyright==1.1.414",
   "pytest==9.1.1",
   "pytest-cov==7.1.0",
@@ -27,7 +27,7 @@ dev = [
 pre-commit-hook-registry = "pre_commit_hook_registry.cli:main"
 
 [tool.uv]
-required-version = ">=0.12.0,<0.13"
+required-version = ">=0.13.6,<0.14"
 package = true
 
 [tool.uv.build-backend]
