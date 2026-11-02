@@ -25,12 +25,13 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
-          version: "0.12.0"
+          version: "0.13.6"
           enable-cache: false
       - run: uv python install ${{ matrix.python }}
       - run: uv sync --all-groups --locked --python ${{ matrix.python }}
       - run: uv run --python ${{ matrix.python }} pytest
-      - run: uv run --python ${{ matrix.python }} pre-commit validate-manifest
+      - if: matrix.python == '3.14'
+        run: uv run --python ${{ matrix.python }} pre-commit validate-manifest
 
   quality:
     runs-on: ubuntu-latest
@@ -40,7 +41,7 @@ jobs:
           persist-credentials: false
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
-          version: "0.12.0"
+          version: "0.13.6"
           enable-cache: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
@@ -69,7 +70,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
-          version: "0.12.0"
+          version: "0.13.6"
           enable-cache: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
