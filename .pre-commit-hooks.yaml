@@ -127,6 +127,7 @@
   description: Run Biome checks without writing files
   entry: biome ci --files-ignore-unknown=true --no-errors-on-unmatched
   language: node
+  language_version: 26.13.0
   types: [text]
   files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
   require_serial: true
