@@ -67,6 +67,7 @@ def test_biome_manifest_is_the_upstream_check_only_hook() -> None:
         "description": "Run Biome checks without writing files",
         "entry": "biome ci --files-ignore-unknown=true --no-errors-on-unmatched",
         "language": "node",
+        "language_version": "26.13.0",
         "types": ["text"],
         "files": r"\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$",
         "require_serial": True,
