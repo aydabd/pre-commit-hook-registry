@@ -39,6 +39,15 @@ def project_version(document: str) -> str:
     return version.group(1)
 
 
+def release_heading_count(changelog: str, version: str) -> int:
+    """Count plain and linked release headings for a version."""
+    headings = re.findall(r"^## ([^\n]+)$", changelog, re.MULTILINE)
+    return sum(
+        heading == version or heading.startswith(f"{version} ") or heading.startswith(f"[{version}]")
+        for heading in headings
+    )
+
+
 def main(version: str) -> None:
     """Validate the release candidate, sign its tag, verify it, and push it."""
     if _VERSION.fullmatch(version) is None:
@@ -67,8 +76,7 @@ def main(version: str) -> None:
     manifest = json.loads(Path(".release-please-manifest.json").read_text(encoding="utf-8"))
     if package_version != version or manifest.get(".") != version:
         fail("VERSION must match pyproject.toml and .release-please-manifest.json")
-    headings = re.findall(r"^## ([^\n]+)$", Path("CHANGELOG.md").read_text(encoding="utf-8"), re.MULTILINE)
-    if sum(heading.startswith(version) for heading in headings) != 1:
+    if release_heading_count(Path("CHANGELOG.md").read_text(encoding="utf-8"), version) != 1:
         fail(f"CHANGELOG.md must contain exactly one {version} release heading")
 
     run("make", "check")
