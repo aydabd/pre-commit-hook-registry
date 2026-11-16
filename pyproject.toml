@@ -1,5 +1,5 @@
 [build-system]
-requires = ["uv_build==0.13.5"]
+requires = ["uv_build==0.13.6"]
 build-backend = "uv_build"
 
 [project]
@@ -17,9 +17,9 @@ dev = [
   "coverage[toml]==7.16.2",
   "pre-commit==4.7.0; python_version >= '3.11'",
   "pyright==1.1.414",
-  "pytest==9.1.1",
+  "pytest==9.2.0",
   "pytest-cov==7.1.0",
-  "ruff==0.17.2",
+  "ruff==0.17.3",
   "types-PyYAML==6.0.12.20250915",
 ]
 
